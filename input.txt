@@ -1,0 +1,5 @@
+btc
+eth
+xrp
+Cardano
+Litecoin
