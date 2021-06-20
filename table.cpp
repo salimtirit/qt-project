@@ -88,7 +88,6 @@ void table::replyFinished(QNetworkReply *reply){
           qDebug() << json_obj[keys.at(i)].toObject()["usd"].toDouble();
           qDebug() << json_obj[keys.at(i)].toObject()["eur"].toDouble();
           qDebug() << json_obj[keys.at(i)].toObject()["gbp"].toDouble();
-
      }
      
      //QString key =  
