@@ -3,6 +3,10 @@
 #include <QRegExp>
 #include <QJsonObject>
 #include <QDebug>
+#include <QHeaderView>
+#include <QVBoxLayout>
+#include <QSpacerItem>
+#include <QWidget>
 
 table::table(QStringList arr,QWidget *parent) : QLabel(parent)
 {
@@ -11,10 +15,9 @@ table::table(QStringList arr,QWidget *parent) : QLabel(parent)
 
 //Table creation
 
-     //QTableWidget *tableWidget = new QTableWidget();
-     //QTableWidgetItem *item = new QTableWidgetItem("bir");
+     this->tableWidget = new QTableWidget();
 
-
+   
 //Until here
 
      layout->addWidget(label);
@@ -90,18 +93,22 @@ void table::replyFinished(QNetworkReply *reply){
           qDebug() << json_obj[keys.at(i)].toObject()["gbp"].toDouble();
      }
      
-     //QString key =  
-     //QJsonValue value =  QJsonObject::take(const QString &key);
-     // use pattern matching to extract the rate 
-/**     QRegExp rx("\"last\": \"(\\d+\\.\\d+)\"");
 
-     if ( rx.indexIn(data, pos) != -1 ) {
-       str = QString("BTC/USD:  ") + rx.cap(1);    // rate found 
+
+     tableWidget->setRowCount(arr.size());
+     tableWidget->setColumnCount(3);
+
+     for (int i = 0; i < this->arr.size(); ++i){
+          for (int j = 0; j < 3; ++j){ 
+
+               QTableWidgetItem *item = new QTableWidgetItem(); 
+               tableWidget->setItem(i,j,item);
+          }
      }
-     else {
-       str = QString("Error") ; 
-     }
-**/
+     
+ 
+     tableWidget->show();
+
 
 
      // set the text of the label 
