@@ -7,6 +7,8 @@
 #include <QNetworkReply>
 #include <QLabel>
 #include <QHBoxLayout>
+#include <QTableWidget>
+#include <QHeaderView>
 #include <QMap>
 #include <QStringList>
 
@@ -18,10 +20,11 @@ private:
 	QString url;
 	QMap<QString,QString> symbolMap;
 	QMap<QString,QString> nameMap;
-	QNetworkAccessManager *manager ;
+	QNetworkAccessManager *manager;
+	QStringList arr;
 
 public:
-	table(QWidget *parent = 0);
+	table(QStringList arr,QWidget *parent = 0);
 	 	
 public slots:
 	void replyFinished(QNetworkReply * reply) ; 

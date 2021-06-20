@@ -4,14 +4,23 @@
 #include <QJsonObject>
 #include <QDebug>
 
-table::table(QWidget *parent) : QLabel(parent)
+table::table(QStringList arr,QWidget *parent) : QLabel(parent)
 {
      label = new QLabel("Connecting");
      QHBoxLayout *layout = new QHBoxLayout;
 
+//Table creation
+
+     //QTableWidget *tableWidget = new QTableWidget();
+     //QTableWidgetItem *item = new QTableWidgetItem("bir");
+
+
+//Until here
+
      layout->addWidget(label);
      setLayout(layout);
 
+     this->arr = arr;
 
      manager = new QNetworkAccessManager(this) ; 
      manager->get(QNetworkRequest(QUrl("https://api.coingecko.com/api/v3/coins/list")));
@@ -33,12 +42,7 @@ void table::dataReceived(QNetworkReply *reply){
           this->nameMap.insert(json_obj["name"].toString(),json_obj["id"].toString());
      }
 
-     QStringList arr;
-     arr.append("eth");
-     arr.append("xrp");
-     arr.append("Cardano");
-     arr.append("Litecoin");
-     getResponse(arr);
+     getResponse(this->arr);
 }
 
 void table::getResponse(QStringList arr){
@@ -48,8 +52,6 @@ void table::getResponse(QStringList arr){
      QString add = "";
      for (int i = 0; i < arr.size();i++){
           QString x = arr[i];
-          qDebug() << x;
-          qDebug() << symbolMap.isEmpty();
           if(this->symbolMap.contains(x)){
                if(add=="")
                     add = symbolMap[x];
@@ -65,7 +67,6 @@ void table::getResponse(QStringList arr){
           }
      }
      url = url + add + "&vs_currencies=usd,eur,gbp";
-     qDebug() << url;
      manager->get(QNetworkRequest(QUrl(url)));
 }
 
@@ -76,15 +77,20 @@ void table::replyFinished(QNetworkReply *reply){
 
      QString data = (QString) reply->readAll();
      QJsonDocument jsonResponse = QJsonDocument::fromJson(data.toUtf8());
-     QJsonArray json_array = jsonResponse.array();
+     QJsonObject json_obj = jsonResponse.object();
+     QStringList keys = json_obj.keys();
      // read the data fetched from the web site
      //QMap<QString,QString[3]> result;
-     
-     for (int i = 0; i < 2; ++i)
-     {
-          qDebug() << json_array.at(i).toString();
-     }
+
      str = this->url;
+     for(int i = 0; i< keys.size();i++){
+          qDebug() << keys.at(i);
+          qDebug() << json_obj[keys.at(i)].toObject()["usd"].toDouble();
+          qDebug() << json_obj[keys.at(i)].toObject()["eur"].toDouble();
+          qDebug() << json_obj[keys.at(i)].toObject()["gbp"].toDouble();
+
+     }
+     
      //QString key =  
      //QJsonValue value =  QJsonObject::take(const QString &key);
      // use pattern matching to extract the rate 
