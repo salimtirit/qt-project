@@ -1,27 +1,19 @@
 #include <QtGui>
 #include "table.h"
-#include <QRegExp>
 #include <QJsonObject>
 #include <QDebug>
 #include <QHeaderView>
-#include <QVBoxLayout>
 #include <QSpacerItem>
 #include <QWidget>
 
 table::table(QStringList arr,QWidget *parent) : QLabel(parent)
 {
-     label = new QLabel("Connecting");
-     QHBoxLayout *layout = new QHBoxLayout;
 
 //Table creation
-
      this->tableWidget = new QTableWidget();
 
-   
+     //QTableWidget::setHorizontalHeaderItem()
 //Until here
-
-     layout->addWidget(label);
-     setLayout(layout);
 
      this->arr = arr;
 
@@ -75,42 +67,40 @@ void table::getResponse(QStringList arr){
 
 
 void table::replyFinished(QNetworkReply *reply){
-     //we may use json here
-     QString str ;
-
      QString data = (QString) reply->readAll();
      QJsonDocument jsonResponse = QJsonDocument::fromJson(data.toUtf8());
      QJsonObject json_obj = jsonResponse.object();
      QStringList keys = json_obj.keys();
-     // read the data fetched from the web site
-     //QMap<QString,QString[3]> result;
 
-     str = this->url;
-     for(int i = 0; i< keys.size();i++){
-          qDebug() << keys.at(i);
-          qDebug() << json_obj[keys.at(i)].toObject()["usd"].toDouble();
-          qDebug() << json_obj[keys.at(i)].toObject()["eur"].toDouble();
-          qDebug() << json_obj[keys.at(i)].toObject()["gbp"].toDouble();
-     }
-     
-
-
-     tableWidget->setRowCount(arr.size());
+     tableWidget->setRowCount(keys.size());
      tableWidget->setColumnCount(3);
 
-     for (int i = 0; i < this->arr.size(); ++i){
-          for (int j = 0; j < 3; ++j){ 
 
-               QTableWidgetItem *item = new QTableWidgetItem(); 
-               tableWidget->setItem(i,j,item);
-          }
+     QStringList Hheaders;
+     Hheaders.append("USD");
+     Hheaders.append("EUR");
+     Hheaders.append("GBP");
+     tableWidget->setHorizontalHeaderLabels(Hheaders);
+     QStringList Vheaders;
+     for (int i = 0; i < keys.size(); i++){
+          QString a = keys.at(i);
+          QString first = a.replace(0,1,a[0].toUpper());
+          Vheaders.append(first);
+
+          QTableWidgetItem *item0 = new QTableWidgetItem(QString::number(json_obj[keys.at(i)].toObject()["usd"].toDouble()));
+
+          tableWidget->setItem(i,0,item0);
+
+          QTableWidgetItem *item1 = new QTableWidgetItem(QString::number(json_obj[keys.at(i)].toObject()["eur"].toDouble()));
+
+          tableWidget->setItem(i,1,item1);
+
+          QTableWidgetItem *item2 = new QTableWidgetItem(QString::number(json_obj[keys.at(i)].toObject()["gbp"].toDouble()));
+
+          tableWidget->setItem(i,2,item2);
      }
-     
- 
-     tableWidget->show();
 
+     tableWidget->setVerticalHeaderLabels(Vheaders);
 
-
-     // set the text of the label 
-     label->setText(str) ;
+     tableWidget->resize(380 , keys.size()*35);
 }

@@ -22,10 +22,11 @@ private:
 	QMap<QString,QString> nameMap;
 	QNetworkAccessManager *manager;
 	QStringList arr;
-	QTableWidget *tableWidget;
+	
 
 public:
 	table(QStringList arr,QWidget *parent = 0);
+	QTableWidget *tableWidget;
 	 	
 public slots:
 	void replyFinished(QNetworkReply * reply) ; 
