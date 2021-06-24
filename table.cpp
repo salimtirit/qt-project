@@ -6,6 +6,11 @@
 #include <QSpacerItem>
 #include <QWidget>
 
+
+/*
+     Creating the table object. Also gets the information about currencies and
+     calls dataReceived function.
+*/
 table::table(QStringList arr,QWidget *parent) : QLabel(parent)
 {
      this->tableWidget = new QTableWidget();
@@ -19,6 +24,14 @@ table::table(QStringList arr,QWidget *parent) : QLabel(parent)
      // When completed, slot replyFinished will be called.
 }
 
+
+/*
+     Given reply includes all data that is supported on the site.
+     We put all information to two maps. One of them has symbols
+     as keys and ids as values and the other has names as keys 
+     and ids as values. Than this function calls getResponse function. 
+
+*/
 void table::dataReceived(QNetworkReply *reply){
      QString data = (QString) reply->readAll();
      QJsonDocument jsonResponse = QJsonDocument::fromJson(data.toUtf8());
@@ -32,6 +45,14 @@ void table::dataReceived(QNetworkReply *reply){
 
      getResponse(this->arr);
 }
+
+/*
+     Creates the necessary url to retrieve the data. 
+     Adds ids of currencies to the tail of the base url. 
+     And after ids adds the currencies we want the data of.
+     Than uses get to retrieve data from the website. After getting data
+     calls replyFinished function.
+*/
 
 void table::getResponse(QStringList arr){
      manager = new QNetworkAccessManager(this) ;
@@ -59,6 +80,9 @@ void table::getResponse(QStringList arr){
 }
 
 
+/*
+     Reads the data and fills the table.
+*/
 void table::replyFinished(QNetworkReply *reply){
      QString data = (QString) reply->readAll();
      QJsonDocument jsonResponse = QJsonDocument::fromJson(data.toUtf8());
@@ -69,7 +93,7 @@ void table::replyFinished(QNetworkReply *reply){
      tableWidget->setColumnCount(3);
 
      QStringList Hheaders;
-     Hheaders.append("USD");
+     Hheaders.append("USD"); // horizontal adders. 
      Hheaders.append("EUR");
      Hheaders.append("GBP");
      tableWidget->setHorizontalHeaderLabels(Hheaders);
@@ -77,7 +101,7 @@ void table::replyFinished(QNetworkReply *reply){
      for (int i = 0; i < keys.size(); i++){
           QString a = keys.at(i);
           QString first = a.replace(0,1,a[0].toUpper());
-          Vheaders.append(first);
+          Vheaders.append(first); // adds the key to vertical header.
 
           QTableWidgetItem *item0 = new QTableWidgetItem(QString::number(json_obj[keys.at(i)].toObject()["usd"].toDouble()));
 
