@@ -12,7 +12,7 @@ int main(int argc,char *argv[])
 {
 	QApplication app(argc, argv);
 	
-	qputenv("MYCRYPTOCONVERT", "/home/cmpe250student/Desktop/project3/input.txt");
+	//qputenv("MYCRYPTOCONVERT", "/home/cmpe250student/Desktop/project3/input.txt"); delete this
 	QString inputFile = qgetenv("MYCRYPTOCONVERT");
 
 	std::ifstream infile;

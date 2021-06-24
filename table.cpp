@@ -8,12 +8,7 @@
 
 table::table(QStringList arr,QWidget *parent) : QLabel(parent)
 {
-
-//Table creation
      this->tableWidget = new QTableWidget();
-
-     //QTableWidget::setHorizontalHeaderItem()
-//Until here
 
      this->arr = arr;
 
@@ -22,10 +17,8 @@ table::table(QStringList arr,QWidget *parent) : QLabel(parent)
      connect(manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(dataReceived(QNetworkReply *)));
      // Initiate retrieval of  the data from the web page.
      // When completed, slot replyFinished will be called.
-     
-     //string url = "https://api.coingecko.com/api/v3/simple/price?ids=btc,litecoin&vs_currencies=usd,eur,gbp";
-     //string url2 = "https://api.coingecko.com/api/v3/coins/list";
 }
+
 void table::dataReceived(QNetworkReply *reply){
      QString data = (QString) reply->readAll();
      QJsonDocument jsonResponse = QJsonDocument::fromJson(data.toUtf8());
@@ -74,7 +67,6 @@ void table::replyFinished(QNetworkReply *reply){
 
      tableWidget->setRowCount(keys.size());
      tableWidget->setColumnCount(3);
-
 
      QStringList Hheaders;
      Hheaders.append("USD");
